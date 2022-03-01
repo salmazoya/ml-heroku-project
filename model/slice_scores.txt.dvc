@@ -1,0 +1,4 @@
+outs:
+- md5: d6a56a701c5811f9b724857c927497a9
+  size: 8725
+  path: slice_scores.txt

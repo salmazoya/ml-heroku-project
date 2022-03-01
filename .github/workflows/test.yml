@@ -1,0 +1,41 @@
+name: Python application
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.10.1"
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_Access_Key_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_Secret_Access_Key }}
+        aws-region: us-east-1
+
+    - name: Setup DVC
+      uses: iterative/setup-dvc@v1
+
+    - name: Pull data from DVC
+      run: dvc pull data -R
+
+    - name: Run Flake8
+      run: flake8
+
+    - name: Run pytest
+      run: pytest
